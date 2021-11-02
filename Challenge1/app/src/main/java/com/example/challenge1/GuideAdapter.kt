@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class GuideAdapter(private var guideList: List<Guide>) :
+class GuideAdapter(private var guideList: MutableList<Guide>) :
     RecyclerView.Adapter<GuideAdapter.GuideViewHolder>() {
     private val TAG = "GuideAdapter"
 
@@ -36,9 +36,13 @@ class GuideAdapter(private var guideList: List<Guide>) :
         }
     }
 
-
     override fun getItemCount(): Int {
         return if (guideList.isNotEmpty()) guideList.size else 1
+    }
+
+    fun updateData(compareList: MutableList<Guide>){
+        if(compareList!=guideList)
+            guideList=compareList
     }
 
     fun getData(position: Int): Guide? {

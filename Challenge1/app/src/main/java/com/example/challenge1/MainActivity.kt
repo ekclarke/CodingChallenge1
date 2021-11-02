@@ -20,6 +20,7 @@ import kotlin.concurrent.thread
 class MainActivity : AppCompatActivity(), GetJSONData.OnDataAvailable,GetRawData.OnDownloadComplete {
     private lateinit var guideViewModel: GuideViewModel
     private lateinit var binding: ActivityMainBinding
+    private lateinit var adapter: GuideAdapter
     private  var guideList: MutableList<Guide> = mutableListOf()
 
 
@@ -28,20 +29,23 @@ class MainActivity : AppCompatActivity(), GetJSONData.OnDataAvailable,GetRawData
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //inflate the layout
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val recyclerView = binding.guideRecyclerView
         guideViewModel = GuideViewModel(this)
+
         val getRawData = GetRawData(this)
         val getJSONData = GetJSONData(this)
-
         thread {
             guideList=getJSONData.processJSON(getRawData.getFromURL(dataUrl))
         }
-        showGuideList(guideList)
+        adapter = GuideAdapter(guideList)
+        recyclerView.adapter=adapter
+        liveDataRefresh(guideList)
     }
 
-    fun showGuideList(data: List<Guide>){
+    fun liveDataRefresh(data: List<Guide>){
         guideViewModel.name.observe(this) {
         binding.nameView.text=it
                 }
