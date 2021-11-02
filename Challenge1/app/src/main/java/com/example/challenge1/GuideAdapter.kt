@@ -19,9 +19,9 @@ class GuideAdapter(private var guideList: List<Guide>) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GuideViewHolder {
         Log.d(TAG, ".onCreateViewHolder new view requested")
-        val view =
+        val adapterLayout =
             LayoutInflater.from(parent.context).inflate(R.layout.activity_main, parent, false)
-        return GuideViewHolder(view)
+        return GuideViewHolder(adapterLayout)
     }
 
     override fun onBindViewHolder(holder: GuideViewHolder, position: Int) {
@@ -35,6 +35,7 @@ class GuideAdapter(private var guideList: List<Guide>) :
 
         }
     }
+
 
     override fun getItemCount(): Int {
         return if (guideList.isNotEmpty()) guideList.size else 1

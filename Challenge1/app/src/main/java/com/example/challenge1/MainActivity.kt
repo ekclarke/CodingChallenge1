@@ -20,7 +20,7 @@ import kotlin.concurrent.thread
 class MainActivity : AppCompatActivity(), GetJSONData.OnDataAvailable,GetRawData.OnDownloadComplete {
     private lateinit var guideViewModel: GuideViewModel
     private lateinit var binding: ActivityMainBinding
-    private lateinit var guideList: List<Guide>
+    private  var guideList: MutableList<Guide> = mutableListOf()
 
 
     private val TAG = "MainActivity"
@@ -34,7 +34,6 @@ class MainActivity : AppCompatActivity(), GetJSONData.OnDataAvailable,GetRawData
         guideViewModel = GuideViewModel(this)
         val getRawData = GetRawData(this)
         val getJSONData = GetJSONData(this)
-
 
         thread {
             guideList=getJSONData.processJSON(getRawData.getFromURL(dataUrl))
