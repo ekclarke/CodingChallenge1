@@ -24,10 +24,4 @@ class GuideViewModel(activity: AppCompatActivity) {
     private val _icon = MutableLiveData<String>()
     val icon: LiveData<String> = _icon
 
-    init{
-
-    }
-
-
-
 }

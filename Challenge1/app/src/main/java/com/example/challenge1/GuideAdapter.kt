@@ -11,19 +11,24 @@ import androidx.recyclerview.widget.RecyclerView
 class GuideAdapter(private var guideList: MutableList<Guide>) :
     RecyclerView.Adapter<GuideAdapter.GuideViewHolder>() {
     private val TAG = "GuideAdapter"
+    //datalist as internal private property
+    //datalist changed through update data method
 
     class GuideViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val nameView: TextView = view.findViewById(R.id.name_view)
         val startView: TextView = view.findViewById(R.id.start_view)
     }
 
+    //DO NOT put the recylcerview here - put the list item layout!
+    //view holders hold your view (item layout) and the data for that view
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GuideViewHolder {
         Log.d(TAG, ".onCreateViewHolder new view requested")
         val adapterLayout =
-            LayoutInflater.from(parent.context).inflate(R.layout.activity_main, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.group_item, parent, false)
         return GuideViewHolder(adapterLayout)
     }
 
+    //best to not do empty states in adapters - best to handle with viewmodel
     override fun onBindViewHolder(holder: GuideViewHolder, position: Int) {
         if (guideList.isEmpty()) {
             holder.nameView.setText("No items found.")
@@ -37,7 +42,7 @@ class GuideAdapter(private var guideList: MutableList<Guide>) :
     }
 
     override fun getItemCount(): Int {
-        return if (guideList.isNotEmpty()) guideList.size else 1
+        return guideList.size
     }
 
     fun updateData(compareList: MutableList<Guide>){
