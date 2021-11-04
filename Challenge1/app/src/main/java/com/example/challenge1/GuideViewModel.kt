@@ -1,10 +1,11 @@
 package com.example.challenge1
 
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import kotlin.concurrent.thread
 
-class GuideViewModel(activity: AppCompatActivity) {
+class GuideViewModel : ViewModel(), GetJSONData.OnDataAvailable {
 
     private val _startDate = MutableLiveData<String>()
     val startDate: LiveData<String> = _startDate
@@ -24,4 +25,29 @@ class GuideViewModel(activity: AppCompatActivity) {
     private val _icon = MutableLiveData<String>()
     val icon: LiveData<String> = _icon
 
+    fun retrieveData(url: String) {
+        var guideList: List<Guide> = listOf()
+        val getJSONData = GetJSONData(this)
+
+        thread {
+            guideList = getJSONData.getJSON(url)
+        }
+        updateVM(guideList)
+    }
+
+    private fun updateVM(data: List<Guide>) {
+        //make sure this iterates appropriately
+        for (i in data.indices) {
+            _name.value = data[i].name!!
+            _startDate.value = data[i].startDate!!
+        }
+    }
+
+    override fun onDataAvailable(data: List<Guide>) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onError(exception: Exception) {
+        TODO("Not yet implemented")
+    }
 }

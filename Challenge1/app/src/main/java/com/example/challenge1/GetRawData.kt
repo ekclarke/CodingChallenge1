@@ -10,7 +10,7 @@ import java.net.URL
 enum class DownloadStatus {
     OK, IDLE, NOT_INITIALISED, FAILED_OR_EMPTY, PERMISSIONS_ERROR, ERROR
 }
-class GetRawData(private val listener: OnDownloadComplete) : ArrayList<String>() {
+class GetRawData(private val listener: GetJSONData) : ArrayList<String>() {
     private val TAG = "GetRawData"
     private var downloadStatus = DownloadStatus.IDLE
 
@@ -26,7 +26,7 @@ class GetRawData(private val listener: OnDownloadComplete) : ArrayList<String>()
 
         try {
             downloadStatus = DownloadStatus.OK
-            var rawData = URL(params[0]).readText()
+            val rawData = URL(params[0]).readText()
             Log.d(TAG, rawData)
             return rawData
         } catch (e: Exception) {

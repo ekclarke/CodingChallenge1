@@ -3,7 +3,6 @@ package com.example.challenge1
 import android.util.Log
 import org.json.JSONException
 import org.json.JSONObject
-import java.net.URL
 
 //Deliverable two
 
@@ -15,7 +14,13 @@ class GetJSONData(private val listener: OnDataAvailable) : ArrayList<Guide>() {
         fun onError(exception: Exception)
     }
 
-      fun processJSON(vararg params: String): ArrayList<Guide> {
+    fun getJSON(url: String): List<Guide>{
+        val getRawData = GetRawData(this)
+        val rawData = getRawData.getFromURL(url)
+        return processJSON(rawData)
+    }
+
+      private fun processJSON(vararg params: String): List<Guide> {
         Log.d(TAG, "retrieveData starts")
 
         val guideList = ArrayList<Guide>()
@@ -26,13 +31,13 @@ class GetJSONData(private val listener: OnDataAvailable) : ArrayList<Guide>() {
             val dataArray = jsonData.getJSONArray("data")
 
             for (i in 0 until dataArray.length()) {
-                val jsonData = dataArray.getJSONObject(i)
-                val startDate = jsonData.getString("startDate")
-                val endDate = jsonData.getString("endDate")
-                val name = jsonData.getString("name")
-                val url = jsonData.getString("url")
-                val venue = jsonData.getString("venue")
-                val icon = jsonData.getString("icon")
+                val jsonItem = dataArray.getJSONObject(i)
+                val startDate = jsonItem.getString("startDate")
+                val endDate = jsonItem.getString("endDate")
+                val name = jsonItem.getString("name")
+                val url = jsonItem.getString("url")
+                val venue = jsonItem.getString("venue")
+                val icon = jsonItem.getString("icon")
 
                 val guideObject = Guide(startDate, endDate, name, url, venue, icon)
 

@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import com.example.challenge1.databinding.ActivityMainBinding
-import kotlin.concurrent.thread
+import androidx.activity.viewModels
 
 //program flow/architecture:
 //MainActivity binds RecyclerView
@@ -16,16 +16,16 @@ import kotlin.concurrent.thread
 //MainActivity observes LiveData
 //MainActivity updates Adapter with data to be displayed in RecyclerView
 
+//ViewModelProviders are deprecated but can still be used
+
 //Configurations A and B
 class MainActivity : AppCompatActivity(), GetJSONData.OnDataAvailable,GetRawData.OnDownloadComplete {
-    private lateinit var guideViewModel: GuideViewModel
+    private val guideViewModel: GuideViewModel by viewModels()
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: GuideAdapter
-    private  var guideList: MutableList<Guide> = mutableListOf()
-
 
     private val TAG = "MainActivity"
-    private val dataUrl= "https://www.guidebook.com/service/v2/upcomingGuides/"
+    private val dataUrl = "https://www.guidebook.com/service/v2/upcomingGuides/"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,34 +33,16 @@ class MainActivity : AppCompatActivity(), GetJSONData.OnDataAvailable,GetRawData
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val recyclerView = binding.guideRecyclerView
-        guideViewModel = GuideViewModel(this)
-        adapter = GuideAdapter(guideList)
-        recyclerView.adapter=adapter
+        adapter = GuideAdapter()
+        recyclerView.adapter = adapter
 
-        val getRawData = GetRawData(this)
-        val getJSONData = GetJSONData(this)
-
-        //change this so the background processing is happening via a function in viewModel and actual threading is in GetRawData
-        thread {
-            guideList=getJSONData.processJSON(getRawData.getFromURL(dataUrl))
-        }
-
-        //liveDataRefresh(guideList)
+        guideViewModel.retrieveData(dataUrl)
     }
-
-    //don't do this here - do it in the adapter
-//    fun liveDataRefresh(data: List<Guide>){
-//        guideViewModel.name.observe(this) {
-//        binding.nameView.text=it
-//                }
-//        guideViewModel.startDate.observe(this){
-//            binding.startView.text=it
-//        }
-//    }
-
 
     override fun onDataAvailable(data: List<Guide>) {
         Log.d(TAG, "onDataAvailable called")
+        adapter.loadNewData(data)
+
     }
 
     override fun onError(exception: Exception) {

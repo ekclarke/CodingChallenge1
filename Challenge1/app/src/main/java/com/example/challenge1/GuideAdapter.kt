@@ -8,18 +8,17 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class GuideAdapter(private var guideList: MutableList<Guide>) :
+class GuideAdapter:
     RecyclerView.Adapter<GuideAdapter.GuideViewHolder>() {
     private val TAG = "GuideAdapter"
-    //datalist as internal private property
-    //datalist changed through update data method
+    private var guideList: List<Guide> = listOf()
 
     class GuideViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val nameView: TextView = view.findViewById(R.id.name_view)
         val startView: TextView = view.findViewById(R.id.start_view)
     }
 
-    //DO NOT put the recylcerview here - put the list item layout!
+    //DO NOT put the recyclerview here - put the list item layout!
     //view holders hold your view (item layout) and the data for that view
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GuideViewHolder {
         Log.d(TAG, ".onCreateViewHolder new view requested")
@@ -28,11 +27,11 @@ class GuideAdapter(private var guideList: MutableList<Guide>) :
         return GuideViewHolder(adapterLayout)
     }
 
-    //best to not do empty states in adapters - best to handle with viewmodel
+    //best practice to not do empty states in adapters - best to handle with viewModel
     override fun onBindViewHolder(holder: GuideViewHolder, position: Int) {
         if (guideList.isEmpty()) {
-            holder.nameView.setText("No items found.")
-            holder.startView.setText("n/a")
+            holder.nameView.text = "No items found."
+            holder.startView.text = "n/a"
         } else {
             val guideItem = guideList[position]
             holder.nameView.text = guideItem.name
@@ -45,13 +44,14 @@ class GuideAdapter(private var guideList: MutableList<Guide>) :
         return guideList.size
     }
 
-    fun updateData(compareList: MutableList<Guide>){
-        if(compareList!=guideList)
-            guideList=compareList
+    fun loadNewData(newList: List<Guide>){
+        guideList=newList
+        notifyDataSetChanged()
     }
 
     fun getData(position: Int): Guide? {
         return if (guideList.isNotEmpty()) guideList[position] else null
     }
+
 
 }
