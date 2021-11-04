@@ -1,11 +1,13 @@
 package com.example.challenge1
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlin.concurrent.thread
 
-class GuideViewModel : ViewModel(), GetJSONData.OnDataAvailable {
+class GuideViewModel() : ViewModel(){
+    private val TAG = "GuideViewModel"
 
     private val _startDate = MutableLiveData<String>()
     val startDate: LiveData<String> = _startDate
@@ -25,29 +27,22 @@ class GuideViewModel : ViewModel(), GetJSONData.OnDataAvailable {
     private val _icon = MutableLiveData<String>()
     val icon: LiveData<String> = _icon
 
-    fun retrieveData(url: String) {
-        var guideList: List<Guide> = listOf()
-        val getJSONData = GetJSONData(this)
+    private val _guideList = MutableLiveData<List<Guide>>()
+    val guideList: LiveData<List<Guide>> = _guideList
+
+    fun retrieveData(url: String): List<Guide> {
+        Log.d(TAG, "retrieveData called")
+        val getJSONData = GetJSONData()
 
         thread {
-            guideList = getJSONData.getJSON(url)
+            _guideList.value = getJSONData.requestJSON(url)
         }
-        updateVM(guideList)
-    }
-
-    private fun updateVM(data: List<Guide>) {
-        //make sure this iterates appropriately
-        for (i in data.indices) {
-            _name.value = data[i].name!!
-            _startDate.value = data[i].startDate!!
+        //not sure !! is safe - think about it
+        if (_guideList.value!!.isNotEmpty()){
+            _name.value = "No items found"
+            _startDate.value = "n/a"
         }
+    return _guideList.value as List<Guide>
     }
 
-    override fun onDataAvailable(data: List<Guide>) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onError(exception: Exception) {
-        TODO("Not yet implemented")
-    }
 }

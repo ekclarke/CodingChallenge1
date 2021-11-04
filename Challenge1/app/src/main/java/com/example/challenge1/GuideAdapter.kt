@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 class GuideAdapter:
     RecyclerView.Adapter<GuideAdapter.GuideViewHolder>() {
     private val TAG = "GuideAdapter"
-    private var guideList: List<Guide> = listOf()
+    private val guideList: MutableList<Guide> = mutableListOf()
 
     class GuideViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val nameView: TextView = view.findViewById(R.id.name_view)
@@ -21,37 +21,32 @@ class GuideAdapter:
     //DO NOT put the recyclerview here - put the list item layout!
     //view holders hold your view (item layout) and the data for that view
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GuideViewHolder {
+        //why isn't this triggering?
         Log.d(TAG, ".onCreateViewHolder new view requested")
-        val adapterLayout =
-            LayoutInflater.from(parent.context).inflate(R.layout.group_item, parent, false)
+        val adapterLayout = LayoutInflater.from(parent.context)
+            .inflate(R.layout.group_item, parent, false)
         return GuideViewHolder(adapterLayout)
     }
 
     //best practice to not do empty states in adapters - best to handle with viewModel
     override fun onBindViewHolder(holder: GuideViewHolder, position: Int) {
-        if (guideList.isEmpty()) {
-            holder.nameView.text = "No items found."
-            holder.startView.text = "n/a"
-        } else {
+        Log.d(TAG, "onBindViewHolder called")
             val guideItem = guideList[position]
+        Log.d(TAG, guideItem.name!!)
             holder.nameView.text = guideItem.name
             holder.startView.text = guideItem.startDate
+         }
 
+    override fun getItemCount()=guideList.size
+
+//something's up with my adapter! fix this!
+    fun update(newList: List<Guide>){
+        Log.d(TAG, "update called")
+        if(newList.isNotEmpty()) {
+            guideList.clear()
+            guideList.addAll(newList)
+            notifyDataSetChanged()
         }
     }
-
-    override fun getItemCount(): Int {
-        return guideList.size
-    }
-
-    fun loadNewData(newList: List<Guide>){
-        guideList=newList
-        notifyDataSetChanged()
-    }
-
-    fun getData(position: Int): Guide? {
-        return if (guideList.isNotEmpty()) guideList[position] else null
-    }
-
 
 }

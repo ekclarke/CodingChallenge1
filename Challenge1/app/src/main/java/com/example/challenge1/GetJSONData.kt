@@ -6,7 +6,7 @@ import org.json.JSONObject
 
 //Deliverable two
 
-class GetJSONData(private val listener: OnDataAvailable) : ArrayList<Guide>() {
+class GetJSONData : ArrayList<Guide>() {
     private val TAG = "GetJSONData"
 
     interface OnDataAvailable {
@@ -14,14 +14,15 @@ class GetJSONData(private val listener: OnDataAvailable) : ArrayList<Guide>() {
         fun onError(exception: Exception)
     }
 
-    fun getJSON(url: String): List<Guide>{
+    fun requestJSON(url: String): List<Guide>{
+        Log.d(TAG,"requestJSON called")
         val getRawData = GetRawData(this)
         val rawData = getRawData.getFromURL(url)
         return processJSON(rawData)
     }
 
       private fun processJSON(vararg params: String): List<Guide> {
-        Log.d(TAG, "retrieveData starts")
+        Log.d(TAG, "processJSON starts")
 
         val guideList = ArrayList<Guide>()
 
@@ -42,19 +43,18 @@ class GetJSONData(private val listener: OnDataAvailable) : ArrayList<Guide>() {
                 val guideObject = Guide(startDate, endDate, name, url, venue, icon)
 
                 guideList.add(guideObject)
-                Log.d(TAG, "Start:$startDate")
-                Log.d(TAG, "End:$endDate")
-                Log.d(TAG, "Name:$name")
-                Log.d(TAG, "URL:$url")
-                Log.d(TAG, "Venue:$venue")
-                Log.d(TAG, "Icon:$icon")
+//                Log.d(TAG, "Start:$startDate")
+//                Log.d(TAG, "End:$endDate")
+//                Log.d(TAG, "Name:$name")
+//                Log.d(TAG, "URL:$url")
+//                Log.d(TAG, "Venue:$venue")
+//                Log.d(TAG, "Icon:$icon")
 
-                Log.d(TAG, ".retrieveData $guideObject")
+                Log.d(TAG, "retrieveData $name")
             }
         } catch (e: JSONException) {
             e.printStackTrace()
             Log.e(TAG, ".retrieveData: Error processing Json data. ${e.message}")
-            listener.onError(e)
         }
 
         Log.d(TAG, ".retrieveData ends")

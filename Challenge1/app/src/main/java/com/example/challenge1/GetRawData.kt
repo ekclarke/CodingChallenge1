@@ -19,6 +19,7 @@ class GetRawData(private val listener: GetJSONData) : ArrayList<String>() {
     }
 
     fun getFromURL(vararg params: String?): String {
+        Log.d(TAG, "getFromURL called")
         if (params[0] == null) {
             downloadStatus = DownloadStatus.NOT_INITIALISED
             return "No URL specified"
