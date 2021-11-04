@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 //MainActivity observes LiveData
 //MainActivity updates Adapter with data to be displayed in RecyclerView
 
+//Future updates: Moshi, OkayHTTP integration
+
 //ViewModelProviders are deprecated but can still be used
 
 //Configurations A and B
@@ -48,8 +50,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun refreshData() {
         Log.d(TAG, "ViewModel called")
-        guideList = guideViewModel.retrieveData(dataUrl)
-        adapter.update(guideList)
+        guideViewModel.retrieveData(dataUrl)
+        guideViewModel.guideList.observe(this){
+            adapter.update(it)
+        }
     }
 
 }

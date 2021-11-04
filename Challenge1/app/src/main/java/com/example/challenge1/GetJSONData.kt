@@ -3,22 +3,24 @@ package com.example.challenge1
 import android.util.Log
 import org.json.JSONException
 import org.json.JSONObject
+import kotlin.concurrent.thread
 
 //Deliverable two
 
 class GetJSONData : ArrayList<Guide>() {
     private val TAG = "GetJSONData"
 
-    interface OnDataAvailable {
-        fun onDataAvailable(data: List<Guide>)
-        fun onError(exception: Exception)
+    interface Callback {
+        fun onComplete(pulledList: List<Guide>)
     }
 
-    fun requestJSON(url: String): List<Guide>{
+    fun requestJSON(url: String, callback: Callback){
         Log.d(TAG,"requestJSON called")
-        val getRawData = GetRawData(this)
-        val rawData = getRawData.getFromURL(url)
-        return processJSON(rawData)
+        thread {
+            val getRawData = GetRawData(this)
+            val rawData = getRawData.getFromURL(url)
+            callback.onComplete(processJSON(rawData))
+        }
     }
 
       private fun processJSON(vararg params: String): List<Guide> {

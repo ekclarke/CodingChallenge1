@@ -4,9 +4,8 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import kotlin.concurrent.thread
 
-class GuideViewModel() : ViewModel(){
+class GuideViewModel() : ViewModel() {
     private val TAG = "GuideViewModel"
 
     private val _startDate = MutableLiveData<String>()
@@ -30,19 +29,21 @@ class GuideViewModel() : ViewModel(){
     private val _guideList = MutableLiveData<List<Guide>>()
     val guideList: LiveData<List<Guide>> = _guideList
 
-    fun retrieveData(url: String): List<Guide> {
+    fun retrieveData(url: String) {
         Log.d(TAG, "retrieveData called")
         val getJSONData = GetJSONData()
 
-        thread {
-            _guideList.value = getJSONData.requestJSON(url)
+        val callback = object : GetJSONData.Callback {
+            override fun onComplete(pulledList: List<Guide>) {
+                _guideList.postValue(pulledList)
+                if (_guideList.value?.isEmpty() != false) {
+                    _name.postValue("No items found")
+                    _startDate.postValue( "n/a")
+                }
+            }
         }
-        //not sure !! is safe - think about it
-        if (_guideList.value!!.isNotEmpty()){
-            _name.value = "No items found"
-            _startDate.value = "n/a"
-        }
-    return _guideList.value as List<Guide>
+        getJSONData.requestJSON(url, callback)
+
     }
 
 }

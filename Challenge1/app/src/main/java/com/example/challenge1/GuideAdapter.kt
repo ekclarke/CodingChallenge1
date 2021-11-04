@@ -21,7 +21,6 @@ class GuideAdapter:
     //DO NOT put the recyclerview here - put the list item layout!
     //view holders hold your view (item layout) and the data for that view
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GuideViewHolder {
-        //why isn't this triggering?
         Log.d(TAG, ".onCreateViewHolder new view requested")
         val adapterLayout = LayoutInflater.from(parent.context)
             .inflate(R.layout.group_item, parent, false)
@@ -39,7 +38,6 @@ class GuideAdapter:
 
     override fun getItemCount()=guideList.size
 
-//something's up with my adapter! fix this!
     fun update(newList: List<Guide>){
         Log.d(TAG, "update called")
         if(newList.isNotEmpty()) {
