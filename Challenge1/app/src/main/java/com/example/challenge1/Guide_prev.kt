@@ -3,7 +3,7 @@ package com.example.challenge1
 import android.os.Parcel
 import android.os.Parcelable
 
-class Guide(
+class Guide_prev(
     var startDate: String?, var endDate: String?, var name: String?, var url: String?, var venue: String?,
     var icon: String?) : Parcelable {
 
@@ -31,12 +31,12 @@ class Guide(
         return 0
     }
 
-    companion object CREATOR : Parcelable.Creator<Guide> {
-        override fun createFromParcel(parcel: Parcel): Guide {
-            return Guide(parcel)
+    companion object CREATOR : Parcelable.Creator<Guide_prev> {
+        override fun createFromParcel(parcel: Parcel): Guide_prev {
+            return Guide_prev(parcel)
         }
 
-        override fun newArray(size: Int): Array<Guide?> {
+        override fun newArray(size: Int): Array<Guide_prev?> {
             return arrayOfNulls(size)
         }
     }

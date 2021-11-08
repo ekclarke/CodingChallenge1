@@ -1,65 +1,48 @@
 package com.example.challenge1
 
 import android.util.Log
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.JsonClass
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
 import org.json.JSONException
 import org.json.JSONObject
 import kotlin.concurrent.thread
 
 //Deliverable two
+//update with moshi!
+@JsonClass(generateAdapter = true)
+data class Guide(
+    val startDate: String,
+    val endDate: String,
+    val name: String,
+    val url: String,
+    val venue: String,
+    val icon: String
+)
 
-class GetJSONData : ArrayList<Guide>() {
+class GetJSONData {
     private val TAG = "GetJSONData"
 
     interface Callback {
         fun onComplete(pulledList: List<Guide>)
     }
 
-    fun requestJSON(url: String, callback: Callback){
-        Log.d(TAG,"requestJSON called")
-        thread {
+    fun requestJSON(url: String, callback: Callback) {
+        Log.d(TAG, "requestJSON called")
             val getRawData = GetRawData(this)
             val rawData = getRawData.getFromURL(url)
             callback.onComplete(processJSON(rawData))
-        }
     }
 
-      private fun processJSON(vararg params: String): List<Guide> {
+    private fun processJSON(downloadedData: String): List<Guide> {
         Log.d(TAG, "processJSON starts")
-
-        val guideList = ArrayList<Guide>()
-
-        try {
-            //best practice is to make raw data retrieval its own class and then return it here
-            val jsonData = JSONObject(params[0])
-            val dataArray = jsonData.getJSONArray("data")
-
-            for (i in 0 until dataArray.length()) {
-                val jsonItem = dataArray.getJSONObject(i)
-                val startDate = jsonItem.getString("startDate")
-                val endDate = jsonItem.getString("endDate")
-                val name = jsonItem.getString("name")
-                val url = jsonItem.getString("url")
-                val venue = jsonItem.getString("venue")
-                val icon = jsonItem.getString("icon")
-
-                val guideObject = Guide(startDate, endDate, name, url, venue, icon)
-
-                guideList.add(guideObject)
-//                Log.d(TAG, "Start:$startDate")
-//                Log.d(TAG, "End:$endDate")
-//                Log.d(TAG, "Name:$name")
-//                Log.d(TAG, "URL:$url")
-//                Log.d(TAG, "Venue:$venue")
-//                Log.d(TAG, "Icon:$icon")
-
-                Log.d(TAG, "retrieveData $name")
-            }
-        } catch (e: JSONException) {
-            e.printStackTrace()
-            Log.e(TAG, ".retrieveData: Error processing Json data. ${e.message}")
-        }
+        val type = Types.newParameterizedType(List::class.java, Guide::class.java)
+        val moshi: Moshi = Moshi.Builder().build()
+        val adapter = moshi.adapter<List<Guide>>(type)
+        var guideList = adapter.fromJson(downloadedData)
 
         Log.d(TAG, ".retrieveData ends")
-        return guideList
-     }
+        return guideList!!
+    }
 }
