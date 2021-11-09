@@ -14,6 +14,7 @@ class GetRawData(private val listener: GetJSONData) : ArrayList<String>() {
     private val TAG = "GetRawData"
     private var rawDataOutput = ""
 
+    //change so this is just a string instead of a vararg params
     fun getFromURL(vararg params: String?): String{
 
         Log.d(TAG, "getFromURL called")
@@ -31,8 +32,8 @@ class GetRawData(private val listener: GetJSONData) : ArrayList<String>() {
                 override fun onResponse(call: Call, response: Response) {
                     response.use {
                         if (!response.isSuccessful) throw IOException("oops")
-
-                        rawDataOutput    = response.body!!.string()
+                        Log.d(TAG, response.body!!.string())
+                        rawDataOutput = response.body!!.string()
                     }
                 }
 

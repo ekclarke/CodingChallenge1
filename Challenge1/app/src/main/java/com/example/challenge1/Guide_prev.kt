@@ -4,8 +4,8 @@ import android.os.Parcel
 import android.os.Parcelable
 
 class Guide_prev(
-    var startDate: String?, var endDate: String?, var name: String?, var url: String?, var venue: String?,
-    var icon: String?) : Parcelable {
+    private var startDate: String?, private var endDate: String?, var name: String?, private var url: String?, private var venue: String?,
+    private var icon: String?) : Parcelable {
 
     constructor(parcel: Parcel) : this(
         parcel.readString(),
@@ -14,8 +14,7 @@ class Guide_prev(
         parcel.readString(),
         parcel.readString(),
         parcel.readString()
-    ) {
-    }
+    )
 
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {

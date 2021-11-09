@@ -31,7 +31,7 @@ class GuideAdapter:
     override fun onBindViewHolder(holder: GuideViewHolder, position: Int) {
         Log.d(TAG, "onBindViewHolder called")
             val guideItem = guideList[position]
-        Log.d(TAG, guideItem.name!!)
+        Log.d(TAG, guideItem.name)
             holder.nameView.text = guideItem.name
             holder.startView.text = guideItem.startDate
          }
