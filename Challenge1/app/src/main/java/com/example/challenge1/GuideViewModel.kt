@@ -31,19 +31,17 @@ class GuideViewModel() : ViewModel() {
 
     fun retrieveData(url: String) {
         Log.d(TAG, "retrieveData called")
-        val getJSONData = GetJSONData()
+        val getJSONData = GuideRepository()
 
-        val callback = object : GetJSONData.Callback {
+        val callback = object : GuideRepository.Callback {
             override fun onComplete(pulledList: List<Guide>) {
                 _guideList.postValue(pulledList)
                 if (_guideList.value?.isEmpty() != false) {
                     _name.postValue("No items found")
-                    _startDate.postValue( "n/a")
+                    _startDate.postValue("n/a")
                 }
             }
         }
         getJSONData.requestJSON(url, callback)
-
     }
-
 }
