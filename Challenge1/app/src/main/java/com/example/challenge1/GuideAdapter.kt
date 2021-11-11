@@ -1,5 +1,6 @@
 package com.example.challenge1
 
+import android.annotation.SuppressLint
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class GuideAdapter:
+class GuideAdapter :
     RecyclerView.Adapter<GuideAdapter.GuideViewHolder>() {
     private val TAG = "GuideAdapter"
     private val guideList: MutableList<Guide> = mutableListOf()
@@ -30,17 +31,18 @@ class GuideAdapter:
     //best practice to not do empty states in adapters - best to handle with viewModel
     override fun onBindViewHolder(holder: GuideViewHolder, position: Int) {
         Log.d(TAG, "onBindViewHolder called")
-            val guideItem = guideList[position]
+        val guideItem = guideList[position]
         Log.d(TAG, guideItem.name)
-            holder.nameView.text = guideItem.name
-            holder.startView.text = guideItem.startDate
-         }
+        holder.nameView.text = guideItem.name
+        holder.startView.text = guideItem.startDate
+    }
 
-    override fun getItemCount()=guideList.size
+    override fun getItemCount() = guideList.size
 
-    fun update(newList: List<Guide>){
+    @SuppressLint("NotifyDataSetChanged")
+    fun update(newList: List<Guide>) {
         Log.d(TAG, "update called")
-        if(newList.isNotEmpty()) {
+        if (newList.isNotEmpty()) {
             guideList.clear()
             guideList.addAll(newList)
             notifyDataSetChanged()

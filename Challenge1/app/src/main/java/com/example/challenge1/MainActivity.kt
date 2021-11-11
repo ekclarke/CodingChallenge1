@@ -17,16 +17,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 //MainActivity observes LiveData
 //MainActivity updates Adapter with data to be displayed in RecyclerView
 
-//Future updates: Moshi, OkayHTTP integration
-
-//ViewModelProviders are deprecated but can still be used
-
-//Configurations A and B
 class MainActivity : AppCompatActivity() {
     private val guideViewModel: GuideViewModel by viewModels()
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: GuideAdapter
-    private lateinit var guideList: List<Guide>
 
     private val TAG = "MainActivity"
     private val dataUrl = "https://www.guidebook.com/service/v2/upcomingGuides/"
@@ -37,22 +31,24 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val recyclerView = binding.guideRecyclerView
-        //do recyclerviews need layout managers?
         Log.d(TAG, "recyclerView bound")
         adapter = GuideAdapter()
-        recyclerView.layoutManager=LinearLayoutManager(this)
+        recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
         recyclerView.setHasFixedSize(true)
         Log.d(TAG, "adapter and layout manager assigned")
-
+        MoshiHelper.buildMoshi()
         refreshData()
     }
 
     private fun refreshData() {
-        Log.d(TAG, "ViewModel called")
+        Log.d(TAG, "refreshData called")
         guideViewModel.retrieveData(dataUrl)
-        guideViewModel.guideList.observe(this){
-            adapter.update(it)
+        guideViewModel.guideList.observe(this) { list ->
+            if (list.isEmpty()) {
+                binding.configTitle.text = getString(R.string.no_items)
+            } else binding.configTitle.text = getString(R.string.default_title)
+            adapter.update(list)
         }
     }
 

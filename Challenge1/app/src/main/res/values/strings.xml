@@ -1,3 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" tools:ignore="Typos">Challenge1</string>
+    <string name="no_items">No items found</string>
+    <string name="default_title">List of Guides</string>
 </resources>

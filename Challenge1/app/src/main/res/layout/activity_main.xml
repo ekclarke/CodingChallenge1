@@ -11,7 +11,7 @@
         android:id="@+id/config_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Configuration A"
+        android:text="List of Guides"
         android:textAlignment="center"
         app:layout_constraintBottom_toTopOf="@id/guide_recycler_view"
         app:layout_constraintLeft_toLeftOf="parent"
